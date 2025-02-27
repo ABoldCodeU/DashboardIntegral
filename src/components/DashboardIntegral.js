@@ -3,10 +3,6 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, L
 
 const DashboardIntegral = () => {
   const [seccionActiva, setSeccionActiva] = useState('resumen');
-  const [tipoReporte, setTipoReporte] = useState('beneficiarios');
-  const [periodoReporte, setPeriodoReporte] = useState('mensual');
-  const [reporteGenerado, setReporteGenerado] = useState(false);
-  const [cargando, setCargando] = useState(false);
   
   // Datos para resumen de avances
   const metasData = [
@@ -66,16 +62,66 @@ const DashboardIntegral = () => {
     { name: 'Dic', capacitados: 8, total: 10 }
   ];
   
-  // Datos para reportes
-  const beneficiarios = [
-    { folio: 'BEC-001', nombre: "María López", programa: "Becas", fecha: "2023-05-01", estatus: "Entregado" },
-    { folio: 'LAM-021', nombre: "Juan Pérez", programa: "Láminas", fecha: "2023-06-10", estatus: "En proceso" },
-    { folio: 'DES-045', nombre: "Ana Torres", programa: "Despensas", fecha: "2023-06-15", estatus: "Entregado" },
-    { folio: 'VIV-012', nombre: "Carlos Díaz", programa: "Vivienda", fecha: "2023-07-01", estatus: "Aprobado" },
-    { folio: 'BEC-010', nombre: "Roberto Méndez", programa: "Becas", fecha: "2023-07-15", estatus: "Entregado" },
-    { folio: 'ADM-031', nombre: "Laura Sánchez", programa: "Adultos Mayores", fecha: "2023-08-05", estatus: "Entregado" },
-    { folio: 'BEC-015', nombre: "Sofía Ramírez", programa: "Becas", fecha: "2023-08-10", estatus: "En proceso" },
-    { folio: 'LAM-030', nombre: "Miguel Ángel Castro", programa: "Láminas", fecha: "2023-09-01", estatus: "Aprobado" }
+  // Estructura de carpetas para la organización digital
+  const estructuraCarpetas = [
+    {
+      nombre: 'Desarrollo Social',
+      tipo: 'carpeta',
+      hijos: [
+        {
+          nombre: 'Programas',
+          tipo: 'carpeta',
+          hijos: [
+            {
+              nombre: 'Láminas',
+              tipo: 'carpeta',
+              hijos: [
+                { nombre: '2023', tipo: 'carpeta', hijos: [
+                  { nombre: 'Activos', tipo: 'carpeta' },
+                  { nombre: 'Concluidos', tipo: 'carpeta' },
+                  { nombre: 'Cancelados', tipo: 'carpeta' },
+                ]},
+                { nombre: '2024', tipo: 'carpeta', hijos: [
+                  { nombre: 'Activos', tipo: 'carpeta' },
+                  { nombre: 'Concluidos', tipo: 'carpeta' },
+                  { nombre: 'Cancelados', tipo: 'carpeta' },
+                ]},
+              ]
+            },
+            {
+              nombre: 'Becas',
+              tipo: 'carpeta',
+              hijos: [
+                { nombre: '2023', tipo: 'carpeta' },
+                { nombre: '2024', tipo: 'carpeta' },
+              ]
+            },
+            { nombre: 'Despensas', tipo: 'carpeta' },
+            { nombre: 'Vivienda', tipo: 'carpeta' },
+            { nombre: 'Adultos Mayores', tipo: 'carpeta' },
+          ]
+        },
+        {
+          nombre: 'Respaldos',
+          tipo: 'carpeta',
+          hijos: [
+            { nombre: 'Semanal', tipo: 'carpeta' },
+            { nombre: 'Mensual', tipo: 'carpeta' },
+          ]
+        },
+        {
+          nombre: 'Reportes',
+          tipo: 'carpeta',
+          hijos: [
+            { nombre: 'Semanales', tipo: 'carpeta' },
+            { nombre: 'Mensuales', tipo: 'carpeta' },
+            { nombre: 'Trimestrales', tipo: 'carpeta' },
+          ]
+        },
+        { nombre: 'Formatos', tipo: 'carpeta' },
+        { nombre: 'Manuales', tipo: 'carpeta' },
+      ]
+    }
   ];
   
   // Calcular totales
@@ -89,23 +135,8 @@ const DashboardIntegral = () => {
     { id: 'expedientes', nombre: 'Expedientes Digitalizados' },
     { id: 'tiempos', nombre: 'Tiempos de Respuesta' },
     { id: 'competencias', nombre: 'Competencias Digitales' },
-    { id: 'reportes', nombre: 'Generador de Reportes' }
+    { id: 'organizacion', nombre: 'Organización Digital' }
   ];
-  
-  // Función para generar reporte
-  const generarReporte = () => {
-    setCargando(true);
-    // Simulamos un tiempo de generación del reporte
-    setTimeout(() => {
-      setCargando(false);
-      setReporteGenerado(true);
-    }, 1500);
-  };
-  
-  // Función para reiniciar
-  const reiniciarReporte = () => {
-    setReporteGenerado(false);
-  };
   
   // Función para simplificar el porcentaje
   const formatoPorcentaje = (porcentaje) => {
@@ -117,6 +148,28 @@ const DashboardIntegral = () => {
   const obtenerFecha = () => {
     const fecha = new Date();
     return fecha.toLocaleDateString();
+  };
+  
+  // Renderizar estructura de carpetas recursivamente
+  const renderCarpeta = (item, nivel = 0) => {
+    return (
+      <div key={item.nombre} style={{ marginLeft: `${nivel * 20}px` }}>
+        <div className="flex items-center my-1">
+          {item.tipo === 'carpeta' ? (
+            <svg className="w-5 h-5 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H2V6zm0 3h16v5a2 2 0 01-2 2H4a2 2 0 01-2-2V9z" clipRule="evenodd" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5 text-gray-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+            </svg>
+          )}
+          <span className="text-sm">{item.nombre}</span>
+        </div>
+        
+        {item.hijos && item.hijos.map(hijo => renderCarpeta(hijo, nivel + 1))}
+      </div>
+    );
   };
   
   return (
@@ -580,399 +633,127 @@ const DashboardIntegral = () => {
           </div>
         )}
         
-        {seccionActiva === 'reportes' && (
+        {seccionActiva === 'organizacion' && (
           <div className="animate-fadeIn">
-            {!reporteGenerado ? (
-              <div>
-                <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md">
-                  <h3 className="text-lg font-semibold text-blue-700 mb-4 border-l-4 border-blue-500 pl-2">Generador de Reportes PDF</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <div className="mb-4">
-                        <label className="block text-gray-700 font-medium mb-2">Tipo de Reporte:</label>
-                        <div className="grid grid-cols-1 gap-3">
-                          <div 
-                            className={`border rounded-md p-3 cursor-pointer transition-all duration-200 ${tipoReporte === 'beneficiarios' ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'}`}
-                            onClick={() => setTipoReporte('beneficiarios')}
-                          >
-                            <div className="font-medium mb-1">Lista de Beneficiarios</div>
-                            <div className="text-sm text-gray-600">Reporte detallado de beneficiarios por programa</div>
-                          </div>
-                          <div 
-                            className={`border rounded-md p-3 cursor-pointer transition-all duration-200 ${tipoReporte === 'estadisticas' ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'}`}
-                            onClick={() => setTipoReporte('estadisticas')}
-                          >
-                            <div className="font-medium mb-1">Estadísticas por Programa</div>
-                            <div className="text-sm text-gray-600">Resumen estadístico de apoyos entregados</div>
-                          </div>
-                          <div 
-                            className={`border rounded-md p-3 cursor-pointer transition-all duration-200 ${tipoReporte === 'pendientes' ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'}`}
-                            onClick={() => setTipoReporte('pendientes')}
-                          >
-                            <div className="font-medium mb-1">Solicitudes Pendientes</div>
-                            <div className="text-sm text-gray-600">Listado de solicitudes en proceso</div>
-                          </div>
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Sistema de Nomenclatura y Organización Digital</h3>
+                <p className="text-gray-600 mb-4">Implementación de un sistema estandarizado para la nomenclatura y organización de archivos digitales.</p>
+                
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-700 mb-2">Formato de nomenclatura:</h4>
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <div className="flex items-center">
+                      <svg className="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-blue-800 font-mono">PROGRAMA_FOLIO_NOMBRE_ESTADO_FECHA.pdf</span>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-sm text-gray-600">
+                    <p className="mb-1">Ejemplo: <strong>LAM_001_JUANPEREZ_ENT_20230315.pdf</strong></p>
+                    <p>Esta nomenclatura permite identificar rápidamente el contenido del archivo y facilita la organización digital.</p>
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-700 mb-2">Beneficios del Sistema:</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
+                    <li>Facilita la localización rápida de expedientes</li>
+                    <li>Minimiza el riesgo de duplicidad o pérdida de información</li>
+                    <li>Estandariza la organización entre diferentes usuarios</li>
+                    <li>Permite generar respaldos sistemáticos</li>
+                    <li>Facilita la continuidad en caso de cambio de personal</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-gray-700 mb-2">Protocolo de Respaldo:</h4>
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm">
+                    <p className="font-semibold text-yellow-800 mb-1">Frecuencia de respaldos:</p>
+                    <ul className="list-disc pl-5 text-gray-600">
+                      <li><strong>Diario:</strong> Documentos críticos y nuevos ingresos</li>
+                      <li><strong>Semanal:</strong> Todos los expedientes activos (viernes)</li>
+                      <li><strong>Mensual:</strong> Base de datos completa (último día)</li>
+                    </ul>
+                    
+                    <p className="font-semibold text-yellow-800 mt-3 mb-1">Medios de respaldo:</p>
+                    <ul className="list-disc pl-5 text-gray-600">
+                      <li>Nube institucional (acceso restringido)</li>
+                      <li>Disco externo cifrado (físico)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Estructura de Organización Digital</h3>
+                <p className="text-gray-600 mb-4">Jerarquía de carpetas para una organización óptima y eficiente.</p>
+                
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-700 mb-2">Jerarquía de Carpetas:</h4>
+                  <div className="bg-gray-50 p-3 border border-gray-200 rounded-md max-h-96 overflow-y-auto">
+                    {estructuraCarpetas.map(carpeta => renderCarpeta(carpeta))}
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-gray-700 mb-2">Mejoras y Resultados:</h4>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                      <p className="font-medium text-green-800 mb-1">Reducción de tiempos de búsqueda:</p>
+                      <div className="flex justify-between text-sm">
+                        <span>Antes: 10-15 minutos</span>
+                        <span className="font-bold">Ahora: &lt;30 segundos</span>
                       </div>
-                      
-                      <div className="mb-4">
-                        <label className="block text-gray-700 font-medium mb-2">Periodo:</label>
-                        <select 
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:outline-none transition-all duration-200"
-                          value={periodoReporte}
-                          onChange={(e) => setPeriodoReporte(e.target.value)}
-                        >
-                          <option value="semanal">Semanal</option>
-                          <option value="mensual">Mensual</option>
-                          <option value="trimestral">Trimestral</option>
-                          <option value="anual">Anual</option>
-                        </select>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div className="bg-green-600 h-2 rounded-full" style={{ width: '95%' }}></div>
                       </div>
-                      
-                      <button 
-                        onClick={generarReporte}
-                        className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 shadow-md hover:shadow-lg transition-all duration-300 flex items-center"
-                      >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Generar Reporte
-                      </button>
                     </div>
                     
-                    <div>
-                      <h4 className="font-medium text-gray-700 mb-2">Vista previa del contenido:</h4>
-                      
-                      {tipoReporte === 'beneficiarios' && (
-                        <div className="bg-white p-3 border border-gray-300 rounded-md shadow-sm">
-                          <p className="text-sm text-gray-600 mb-2">El reporte incluirá:</p>
-                          <ul className="list-disc pl-5 text-sm text-gray-600">
-                            <li>Lista completa de beneficiarios</li>
-                            <li>Clasificación por programa</li>
-                            <li>Fechas de solicitud y entrega</li>
-                            <li>Estado actual de cada solicitud</li>
-                            <li>Estadísticas generales</li>
-                          </ul>
-                        </div>
-                      )}
-                      
-                      {tipoReporte === 'estadisticas' && (
-                        <div className="bg-white p-3 border border-gray-300 rounded-md shadow-sm">
-                          <p className="text-sm text-gray-600 mb-2">El reporte incluirá:</p>
-                          <ul className="list-disc pl-5 text-sm text-gray-600">
-                            <li>Total de beneficiarios por programa</li>
-                            <li>Comparación con periodos anteriores</li>
-                            <li>Porcentaje de apoyos entregados vs. pendientes</li>
-                            <li>Distribución geográfica (por localidad)</li>
-                            <li>Gráficas comparativas</li>
-                          </ul>
-                        </div>
-                      )}
-                      
-                      {tipoReporte === 'pendientes' && (
-                        <div className="bg-white p-3 border border-gray-300 rounded-md shadow-sm">
-                          <p className="text-sm text-gray-600 mb-2">El reporte incluirá:</p>
-                          <ul className="list-disc pl-5 text-sm text-gray-600">
-                            <li>Solicitudes en proceso o pendientes</li>
-                            <li>Tiempo en estado actual</li>
-                            <li>Solicitudes con documentación incompleta</li>
-                            <li>Casos críticos o prioritarios</li>
-                            <li>Acciones recomendadas</li>
-                          </ul>
-                        </div>
-                      )}
-                      
-                      <div className="mt-4">
-                        <h4 className="font-medium text-gray-700 mb-2">Mejoras implementadas:</h4>
-                        <ul className="list-disc pl-5 text-sm text-gray-600">
-                          <li><strong>Generación automática:</strong> Reducción de 2 horas a 25 minutos</li>
-                          <li><strong>Formatos estandarizados:</strong> Coherencia visual y profesional</li>
-                          <li><strong>Tablas dinámicas:</strong> Análisis avanzado de datos</li>
-                          <li><strong>Exportación flexible:</strong> PDF, Excel o documentos compartidos</li>
-                          <li><strong>Sistema programable:</strong> Reportes automáticos periódicos</li>
-                        </ul>
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                      <p className="font-medium text-blue-800 mb-1">Expedientes localizables:</p>
+                      <div className="flex justify-between text-sm">
+                        <span>Antes: 76%</span>
+                        <span className="font-bold">Ahora: 99.5%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '99.5%' }}></div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Ejemplos de Reportes</h3>
-                    <div className="grid grid-cols-1 gap-4">
-                      <div className="bg-white p-4 border border-gray-300 rounded-md shadow-sm hover:shadow-md transition-all duration-300">
-                        <h4 className="font-medium text-gray-700 mb-2">Reporte Semanal</h4>
-                        <p className="text-sm text-gray-600">Resumen ejecutivo con indicadores clave:</p>
-                        <ul className="list-disc pl-5 text-sm text-gray-600 mt-1">
-                          <li>Nuevas solicitudes: <strong>32</strong></li>
-                          <li>Expedientes procesados: <strong>45</strong></li>
-                          <li>Apoyos entregados: <strong>28</strong></li>
-                          <li>Tiempo promedio de respuesta: <strong>10.5 días</strong></li>
-                        </ul>
+                    
+                    <div className="p-3 bg-purple-50 border border-purple-200 rounded-md">
+                      <p className="font-medium text-purple-800 mb-1">Adopción del sistema:</p>
+                      <div className="flex justify-between text-sm">
+                        <span>Meta: 80% del personal</span>
+                        <span className="font-bold">Logrado: 90%</span>
                       </div>
-                      <div className="bg-white p-4 border border-gray-300 rounded-md shadow-sm hover:shadow-md transition-all duration-300">
-                        <h4 className="font-medium text-gray-700 mb-2">Reporte Mensual</h4>
-                        <p className="text-sm text-gray-600">Visión completa del periodo:</p>
-                        <ul className="list-disc pl-5 text-sm text-gray-600 mt-1">
-                          <li>Análisis comparativo con meses anteriores</li>
-                          <li>Desglose por localidades y tipo de apoyo</li>
-                          <li>Proyección de recursos necesarios</li>
-                          <li>Identificación de tendencias y patrones</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Flujo de Generación de Reportes</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                      <div className="flex flex-col space-y-4">
-                        <div className="flex items-start">
-                          <div className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center font-bold mr-2 mt-0.5">1</div>
-                          <div>
-                            <p className="font-medium text-gray-700">Seleccionar tipo de reporte</p>
-                            <p className="text-sm text-gray-600">El usuario elige qué información necesita visualizar (beneficiarios, estadísticas, pendientes)</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start">
-                          <div className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center font-bold mr-2 mt-0.5">2</div>
-                          <div>
-                            <p className="font-medium text-gray-700">Definir periodo y filtros</p>
-                            <p className="text-sm text-gray-600">Se establece el rango de fechas y se pueden aplicar filtros adicionales (programa, localidad)</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start">
-                          <div className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center font-bold mr-2 mt-0.5">3</div>
-                          <div>
-                            <p className="font-medium text-gray-700">Procesamiento automático</p>
-                            <p className="text-sm text-gray-600">El sistema consulta la base de datos, aplica cálculos estadísticos y prepara la presentación</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start">
-                          <div className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center font-bold mr-2 mt-0.5">4</div>
-                          <div>
-                            <p className="font-medium text-gray-700">Generación y distribución</p>
-                            <p className="text-sm text-gray-600">El reporte se exporta en PDF o Excel y puede compartirse digitalmente o imprimirse</p>
-                          </div>
-                        </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div className="bg-purple-600 h-2 rounded-full" style={{ width: '90%' }}></div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            ) : (
-              <div>
-                <div className="bg-green-50 p-4 rounded-md flex items-center mb-6 shadow-md">
-                  <svg className="w-6 h-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span className="text-green-700">¡Reporte generado exitosamente!</span>
-                </div>
-                
-                <div className="border border-gray-300 rounded-md p-4 mb-6 shadow-md bg-white">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold text-blue-700">
-                      {tipoReporte === 'beneficiarios' && 'Reporte de Beneficiarios'}
-                      {tipoReporte === 'estadisticas' && 'Estadísticas por Programa'}
-                      {tipoReporte === 'pendientes' && 'Solicitudes Pendientes'}
-                    </h2>
-                    <div className="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                      Periodo: {periodoReporte.charAt(0).toUpperCase() + periodoReporte.slice(1)}
-                    </div>
-                  </div>
-                  
-                  <div className="border-b border-gray-300 mb-4"></div>
-                  
-                  <div className="mb-4">
-                    <h3 className="font-medium mb-2">Área de Desarrollo Social - Tlalpujahua, Michoacán</h3>
-                    <p className="text-sm text-gray-600">Fecha de generación: {new Date().toLocaleDateString()}</p>
-                  </div>
-                  
-                  {tipoReporte === 'beneficiarios' && (
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full bg-white border border-gray-300 rounded-md overflow-hidden">
-                        <thead className="bg-gradient-to-r from-blue-50 to-gray-100">
-                          <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Folio</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Programa</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estatus</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                          {beneficiarios.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50 transition-colors duration-150">
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.folio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.nombre}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.programa}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.fecha}</td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <span className={`inline-flex px-2 text-xs font-semibold rounded-full ${
-                                  item.estatus === 'Entregado' ? 'bg-green-100 text-green-800' :
-                                  item.estatus === 'En proceso' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-blue-100 text-blue-800'
-                                }`}>
-                                  {item.estatus}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                  
-                  {tipoReporte === 'estadisticas' && (
-                    <div>
-                      <h4 className="font-medium mb-2 border-l-4 border-blue-500 pl-2">Resumen Estadístico:</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <ul className="space-y-2">
-                            <li className="flex justify-between items-center p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors duration-150">
-                              <span>Total de beneficiarios:</span>
-                              <span className="font-bold">{beneficiarios.length}</span>
-                            </li>
-                            <li className="flex justify-between items-center p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors duration-150">
-                              <span>Becas:</span>
-                              <span className="font-bold">{beneficiarios.filter(b => b.programa === 'Becas').length}</span>
-                            </li>
-                            <li className="flex justify-between items-center p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors duration-150">
-                              <span>Láminas:</span>
-                              <span className="font-bold">{beneficiarios.filter(b => b.programa === 'Láminas').length}</span>
-                            </li>
-                            <li className="flex justify-between items-center p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors duration-150">
-                              <span>Despensas:</span>
-                              <span className="font-bold">{beneficiarios.filter(b => b.programa === 'Despensas').length}</span>
-                            </li>
-                            <li className="flex justify-between items-center p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors duration-150">
-                              <span>Vivienda:</span>
-                              <span className="font-bold">{beneficiarios.filter(b => b.programa === 'Vivienda').length}</span>
-                            </li>
-                            <li className="flex justify-between items-center p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors duration-150">
-                              <span>Adultos Mayores:</span>
-                              <span className="font-bold">{beneficiarios.filter(b => b.programa === 'Adultos Mayores').length}</span>
-                            </li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-medium mb-2 border-l-4 border-blue-500 pl-2">Distribución de Programas:</h4>
-                          <div className="h-48">
-                            <ResponsiveContainer width="100%" height="100%">
-                              <PieChart>
-                                <Pie
-                                  data={beneficiariosData}
-                                  cx="50%"
-                                  cy="50%"
-                                  labelLine={false}
-                                  outerRadius={60}
-                                  fill="#8884d8"
-                                  dataKey="value"
-                                  nameKey="name"
-                                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                                >
-                                  {beneficiariosData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                  ))}
-                                </Pie>
-                              </PieChart>
-                            </ResponsiveContainer>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium mb-2 border-l-4 border-blue-500 pl-2">Porcentaje de Apoyos Entregados:</h4>
-                        <div className="w-full bg-gray-200 rounded-full h-4">
-                          <div className="bg-blue-600 h-4 rounded-full transition-all duration-1000" style={{ width: '62.5%' }}></div>
-                        </div>
-                        <div className="text-right mt-1 text-sm text-gray-600">5/8 (62.5%)</div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {tipoReporte === 'pendientes' && (
-                    <div>
-                      <h4 className="font-medium mb-2 border-l-4 border-blue-500 pl-2">Solicitudes en proceso o pendientes:</h4>
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white border border-gray-300 rounded-md overflow-hidden">
-                          <thead className="bg-gradient-to-r from-blue-50 to-gray-100">
-                            <tr>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Folio</th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Programa</th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estatus</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-200">
-                            {beneficiarios
-                              .filter(b => b.estatus !== 'Entregado')
-                              .map((item, index) => (
-                                <tr key={index} className="hover:bg-gray-50 transition-colors duration-150">
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.folio}</td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.nombre}</td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.programa}</td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.fecha}</td>
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`inline-flex px-2 text-xs font-semibold rounded-full ${
-                                      item.estatus === 'En proceso' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
-                                    }`}>
-                                      {item.estatus}
-                                    </span>
-                                  </td>
-                                </tr>
-                              ))
-                            }
-                          </tbody>
-                        </table>
-                      </div>
-                      
-                      <div className="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded-md">
-                        <h4 className="font-medium text-yellow-800 mb-1">Acciones recomendadas:</h4>
-                        <ul className="list-disc pl-5 text-sm text-gray-700">
-                          <li>Dar seguimiento prioritario a expedientes con más de 10 días en estatus "En proceso"</li>
-                          <li>Verificar documentación faltante para casos "Aprobados" pendientes de entrega</li>
-                          <li>Programar visitas de validación para solicitudes de Vivienda</li>
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="border-t border-gray-300 mt-6 pt-4">
-                    <p className="text-sm text-gray-600">Este reporte fue generado automáticamente por el Sistema de Digitalización del Área de Desarrollo Social.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <button 
-                    onClick={reiniciarReporte}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 focus:outline-none transition-all duration-300 hover:shadow"
-                  >
-                    Generar otro reporte
-                  </button>
-                  
-                  <button 
-                    className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none transition-all duration-300 shadow-md hover:shadow-lg flex items-center"
-                  >
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Descargar PDF
-                  </button>
-                </div>
-              </div>
-            )}
+            </div>
             
-            {cargando && (
-              <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 backdrop-filter backdrop-blur-sm">
-                <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                  <p className="text-gray-700">Generando reporte, por favor espere...</p>
+            <div className="bg-gray-50 p-4 rounded-lg shadow-md">
+              <h3 className="font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Impacto y Proyección:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-3 bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300">
+                  <h4 className="font-medium text-gray-800 mb-1">Eficiencia Operativa</h4>
+                  <p className="text-sm text-gray-600">La estandarización de la organización digital ha permitido reducir en un 75% el tiempo dedicado a tareas administrativas de gestión documental.</p>
+                </div>
+                <div className="p-3 bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300">
+                  <h4 className="font-medium text-gray-800 mb-1">Continuidad de Servicio</h4>
+                  <p className="text-sm text-gray-600">El sistema garantiza que la información esté disponible y organizada incluso ante cambios de personal, asegurando la continuidad del servicio.</p>
+                </div>
+                <div className="p-3 bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300">
+                  <h4 className="font-medium text-gray-800 mb-1">Próximos Pasos</h4>
+                  <p className="text-sm text-gray-600">Se planea implementar un sistema de gestión documental con funciones avanzadas de búsqueda, firma electrónica y trazabilidad de cambios.</p>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>
