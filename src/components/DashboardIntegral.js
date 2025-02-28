@@ -1,9 +1,38 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
+// Importaciones necesarias para el componente ReporteSistema (asumiendo que usas Material UI)
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import LinearProgress from '@mui/material/LinearProgress';
+import Chip from '@mui/material/Chip';
+
+
+// Iconos de Material UI (asumiendo que los tienes instalados y los quieres usar)
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import HourglassFullIcon from '@mui/icons-material/HourglassFull';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import PieChartIcon from '@mui/icons-material/PieChart';
+import ErrorIcon from '@mui/icons-material/Error';
+
+
 const DashboardIntegral = () => {
   const [seccionActiva, setSeccionActiva] = useState('resumen');
-  
+
   // Datos para resumen de avances
   const metasData = [
     { objetivo: 'Digitalización', metaOriginal: '30%', logrado: '15%', cumplimiento: 50 },
@@ -11,7 +40,7 @@ const DashboardIntegral = () => {
     { objetivo: 'Tiempos', metaOriginal: '-20%', logrado: '-25%', cumplimiento: 125 },
     { objetivo: 'Sistema Seguimiento', metaOriginal: '50%', logrado: '30%', cumplimiento: 60 }
   ];
-  
+
   // Datos para expedientes digitalizados
   const programasData = [
     { programa: 'Láminas/Tinacos', digitalizados: 87, total: 156, porcentaje: 56 },
@@ -20,7 +49,7 @@ const DashboardIntegral = () => {
     { programa: 'Vivienda', digitalizados: 42, total: 76, porcentaje: 55 },
     { programa: 'Adultos Mayores', digitalizados: 65, total: 98, porcentaje: 66 }
   ];
-  
+
   // Datos para tiempos de respuesta
   const tiemposData = [
     { mes: 'Sept', antes: 14, despues: 14 },
@@ -28,7 +57,7 @@ const DashboardIntegral = () => {
     { mes: 'Nov', antes: 14, despues: 11 },
     { mes: 'Dic', antes: 14, despues: 10.5 }
   ];
-  
+
   // Datos para competencias digitales
   const competenciasData = [
     { nivel: 'Principiante (N1)', antes: 40, despues: 10 },
@@ -36,7 +65,7 @@ const DashboardIntegral = () => {
     { nivel: 'Intermedio (N3)', antes: 20, despues: 45 },
     { nivel: 'Avanzado (N4)', antes: 5, despues: 20 }
   ];
-  
+
   // Datos para programas por estado
   const estadosSolicitudesData = [
     { name: 'Pendientes', value: 45, color: '#ff8042' },
@@ -44,7 +73,7 @@ const DashboardIntegral = () => {
     { name: 'Aprobados', value: 38, color: '#00C49F' },
     { name: 'Entregados', value: 95, color: '#0088FE' }
   ];
-  
+
   // Datos para registro de beneficiarios
   const beneficiariosData = [
     { name: 'Becas', value: 120, color: '#36A2EB' },
@@ -53,7 +82,7 @@ const DashboardIntegral = () => {
     { name: 'Vivienda', value: 60, color: '#4BC0C0' },
     { name: 'Adultos Mayores', value: 95, color: '#9966FF' }
   ];
-  
+
   // Datos de capacitación por mes
   const capacitacionMensualData = [
     { name: 'Sept', capacitados: 4, total: 10 },
@@ -61,7 +90,7 @@ const DashboardIntegral = () => {
     { name: 'Nov', capacitados: 8, total: 10 },
     { name: 'Dic', capacitados: 8, total: 10 }
   ];
-  
+
   // Estructura de carpetas para la organización digital
   const estructuraCarpetas = [
     {
@@ -123,33 +152,34 @@ const DashboardIntegral = () => {
       ]
     }
   ];
-  
+
   // Calcular totales
   const totalDigitalizados = programasData.reduce((sum, program) => sum + program.digitalizados, 0);
   const totalExpedientes = programasData.reduce((sum, program) => sum + program.total, 0);
   const porcentajeTotal = ((totalDigitalizados / totalExpedientes) * 100).toFixed(1);
-  
+
   // Navegación de secciones
   const secciones = [
     { id: 'resumen', nombre: 'Resumen General' },
     { id: 'expedientes', nombre: 'Expedientes Digitalizados' },
     { id: 'tiempos', nombre: 'Tiempos de Respuesta' },
     { id: 'competencias', nombre: 'Competencias Digitales' },
-    { id: 'organizacion', nombre: 'Organización Digital' }
+    { id: 'organizacion', nombre: 'Organización Digital' },
+    { id: 'reporteSistema', nombre: 'Reporte del Sistema' } // Nueva pestaña agregada
   ];
-  
+
   // Función para simplificar el porcentaje
   const formatoPorcentaje = (porcentaje) => {
     if (porcentaje > 100) return 100;
     return Math.round(porcentaje);
   };
-  
+
   // Función para formatear fechas
   const obtenerFecha = () => {
     const fecha = new Date();
     return fecha.toLocaleDateString();
   };
-  
+
   // Renderizar estructura de carpetas recursivamente
   const renderCarpeta = (item, nivel = 0) => {
     return (
@@ -166,21 +196,513 @@ const DashboardIntegral = () => {
           )}
           <span className="text-sm">{item.nombre}</span>
         </div>
-        
+
         {item.hijos && item.hijos.map(hijo => renderCarpeta(hijo, nivel + 1))}
       </div>
     );
   };
-  
+
+
+    // Componente ReporteSistema
+const ReporteSistema = () => {
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <Typography variant="h4" gutterBottom align="center" color="primary">
+          Reporte del Sistema de Gestión de Apoyos Sociales
+        </Typography>
+        <Typography variant="subtitle1" align="center" color="textSecondary" paragraph>
+          Área de Desarrollo Social - Tlalpujahua, Michoacán
+        </Typography>
+        
+        {/* Vista General */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" gutterBottom color="primary" sx={{ 
+            borderBottom: '2px solid', 
+            borderColor: 'primary.main', 
+            pb: 1, 
+            display: 'inline-block' 
+          }}>
+            Vista General del Sistema
+          </Typography>
+          
+          <Box sx={{ bgcolor: '#f5f5f5', p: 3, borderRadius: 1, mb: 3, mt: 2 }}>
+            <Typography variant="body1">
+              El Sistema de Gestión de Apoyos Sociales es una plataforma integral que centraliza toda la información 
+              relacionada con apoyos sociales, desde el registro de beneficiarios hasta el seguimiento de pagos, 
+              incluyendo procesamiento digital de documentos y reportes para toma de decisiones.
+            </Typography>
+          </Box>
+          
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Box sx={{ bgcolor: 'primary.light', borderRadius: '50%', p: 1, mr: 2 }}>
+                      <CheckCircleIcon sx={{ color: 'white' }} />
+                    </Box>
+                    <Typography variant="h6">Registro Simplificado</Typography>
+                  </Box>
+                  <Typography variant="body2" color="textSecondary">
+                    Captura rápida y procesamiento automatizado de documentos.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Box sx={{ bgcolor: 'success.light', borderRadius: '50%', p: 1, mr: 2 }}>
+                      <VisibilityIcon sx={{ color: 'white' }} />
+                    </Box>
+                    <Typography variant="h6">Seguimiento Completo</Typography>
+                  </Box>
+                  <Typography variant="body2" color="textSecondary">
+                    Monitoreo en tiempo real de solicitudes y apoyos otorgados.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Box sx={{ bgcolor: 'secondary.light', borderRadius: '50%', p: 1, mr: 2 }}>
+                      <AssessmentIcon sx={{ color: 'white' }} />
+                    </Box>
+                    <Typography variant="h6">Reportes Avanzados</Typography>
+                  </Box>
+                  <Typography variant="body2" color="textSecondary">
+                    Informes detallados y estadísticas para mejores decisiones.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+        
+        {/* Estado del Proyecto */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" gutterBottom color="primary" sx={{ 
+            borderBottom: '2px solid', 
+            borderColor: 'primary.main', 
+            pb: 1, 
+            display: 'inline-block' 
+          }}>
+            Estado del Proyecto
+          </Typography>
+          
+          <Grid container spacing={3} sx={{ mt: 2 }}>
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Proceso de avance del sistema
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body2" color="textSecondary" sx={{ minWidth: 100 }}>
+                      Progreso:
+                    </Typography>
+                    <Box sx={{ flexGrow: 1, mx: 2 }}>
+                      <LinearProgress variant="determinate" value={38} sx={{ height: 10, borderRadius: 5 }} color="primary" />
+                    </Box>
+                    <Typography variant="body2" fontWeight="bold" color="primary.main">
+                      38%
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Adopción del sistema
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body2" color="textSecondary" sx={{ minWidth: 100 }}>
+                      Meta: 80%
+                    </Typography>
+                    <Box sx={{ flexGrow: 1, mx: 2 }}>
+                      <LinearProgress variant="determinate" value={45} sx={{ height: 10, borderRadius: 5 }} color="secondary" />
+                    </Box>
+                    <Typography variant="body2" fontWeight="bold" color="secondary.main">
+                      Actual: 45%
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Reducción de tiempos de búsqueda
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <Typography variant="body2" color="textSecondary" sx={{ minWidth: 60 }}>
+                      Antes:
+                    </Typography>
+                    <Typography variant="body2" sx={{ mr: 1 }}>
+                      10-15 minutos
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body2" color="textSecondary" sx={{ minWidth: 60 }}>
+                      Ahora:
+                    </Typography>
+                    <Typography variant="body2" color="success.main" sx={{ mr: 1 }}>
+                      &lt;30 segundos
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Expedientes localizables
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <Typography variant="body2" color="textSecondary" sx={{ minWidth: 60 }}>
+                      Antes:
+                    </Typography>
+                    <Box sx={{ flexGrow: 1, ml: 1, mr: 2 }}>
+                      <LinearProgress variant="determinate" value={76} sx={{ height: 8, borderRadius: 4 }} />
+                    </Box>
+                    <Typography variant="body2" sx={{ minWidth: 40 }}>
+                      76%
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body2" color="textSecondary" sx={{ minWidth: 60 }}>
+                      Ahora:
+                    </Typography>
+                    <Box sx={{ flexGrow: 1, ml: 1, mr: 2 }}>
+                      <LinearProgress variant="determinate" value={99.5} sx={{ height: 8, borderRadius: 4 }} color="success" />
+                    </Box>
+                    <Typography variant="body2" color="success.main" sx={{ minWidth: 40 }}>
+                      99.5%
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+        
+        {/* Funcionalidades */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" gutterBottom color="primary" sx={{ 
+            borderBottom: '2px solid', 
+            borderColor: 'primary.main', 
+            pb: 1, 
+            display: 'inline-block' 
+          }}>
+            Funcionalidades Principales
+          </Typography>
+          
+          <Grid container spacing={3} sx={{ mt: 2 }}>
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Box sx={{ bgcolor: 'primary.main', borderRadius: '50%', p: 0.7, mr: 1.5 }}>
+                      <AccountCircleIcon sx={{ color: 'white', fontSize: 18 }} />
+                    </Box>
+                    <Typography variant="subtitle1" fontWeight="medium">Gestión de Beneficiarios</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                    <Chip size="small" label="Registro completo" color="primary" variant="outlined" />
+                    <Chip size="small" label="Historial de apoyos" color="primary" variant="outlined" />
+                    <Chip size="small" label="Documentación digital" color="primary" variant="outlined" />
+                    <Chip size="small" label="Búsqueda avanzada" color="primary" variant="outlined" />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Box sx={{ bgcolor: 'success.main', borderRadius: '50%', p: 0.7, mr: 1.5 }}>
+                      <FormatListBulletedIcon sx={{ color: 'white', fontSize: 18 }} />
+                    </Box>
+                    <Typography variant="subtitle1" fontWeight="medium">Control de Solicitudes</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                    <Chip size="small" label="Creación y edición" color="success" variant="outlined" />
+                    <Chip size="small" label="Seguimiento de estado" color="success" variant="outlined" />
+                    <Chip size="small" label="Documentos de respaldo" color="success" variant="outlined" />
+                    <Chip size="small" label="Gestión de pagos" color="success" variant="outlined" />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Box sx={{ bgcolor: 'warning.main', borderRadius: '50%', p: 0.7, mr: 1.5 }}>
+                      <CalculateIcon sx={{ color: 'white', fontSize: 18 }} />
+                    </Box>
+                    <Typography variant="subtitle1" fontWeight="medium">Evaluación de Vulnerabilidad</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                    <Chip size="small" label="Cálculo de índice" color="warning" variant="outlined" />
+                    <Chip size="small" label="Criterios parametrizables" color="warning" variant="outlined" />
+                    <Chip size="small" label="Priorización automática" color="warning" variant="outlined" />
+                    <Chip size="small" label="Recomendaciones" color="warning" variant="outlined" />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <Box sx={{ bgcolor: 'secondary.main', borderRadius: '50%', p: 0.7, mr: 1.5 }}>
+                      <HourglassFullIcon sx={{ color: 'white', fontSize: 18 }} />
+                    </Box>
+                    <Typography variant="subtitle1" fontWeight="medium">Programación y Seguimiento</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                    <Chip size="small" label="Calendario de entregas" color="secondary" variant="outlined" />
+                    <Chip size="small" label="Notificaciones" color="secondary" variant="outlined" />
+                    <Chip size="small" label="Recordatorios" color="secondary" variant="outlined" />
+                    <Chip size="small" label="Control de plazos" color="secondary" variant="outlined" />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+        
+        {/* Procesamiento de Documentos */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" gutterBottom color="primary" sx={{ 
+            borderBottom: '2px solid', 
+            borderColor: 'primary.main', 
+            pb: 1, 
+            display: 'inline-block' 
+          }}>
+            Procesamiento de Documentos
+          </Typography>
+          
+          <Card sx={{ mt: 2, mb: 3, bgcolor: 'primary.light' }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+                Proceso de Importación de Credenciales
+              </Typography>
+              
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Card>
+                    <CardContent sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Box sx={{ bgcolor: 'primary.main', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                          <Typography variant="body2" sx={{ color: 'white', fontWeight: 'bold' }}>1</Typography>
+                        </Box>
+                        <Typography variant="subtitle2">Carga de documentos</Typography>
+                      </Box>
+                      <Typography variant="body2" color="textSecondary">
+                        El usuario carga imágenes de credenciales (JPG, PNG) o documentos (PDF).
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Card>
+                    <CardContent sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Box sx={{ bgcolor: 'primary.main', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                          <Typography variant="body2" sx={{ color: 'white', fontWeight: 'bold' }}>2</Typography>
+                        </Box>
+                        <Typography variant="subtitle2">Procesamiento OCR</Typography>
+                      </Box>
+                      <Typography variant="body2" color="textSecondary">
+                        El sistema analiza la imagen y extrae texto mediante OCR.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Card>
+                    <CardContent sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Box sx={{ bgcolor: 'primary.main', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                          <Typography variant="body2" sx={{ color: 'white', fontWeight: 'bold' }}>3</Typography>
+                        </Box>
+                        <Typography variant="subtitle2">Validación de datos</Typography>
+                      </Box>
+                      <Typography variant="body2" color="textSecondary">
+                        Se verifican los datos extraídos contra patrones conocidos.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Card>
+                    <CardContent sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Box sx={{ bgcolor: 'primary.main', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                          <Typography variant="body2" sx={{ color: 'white', fontWeight: 'bold' }}>4</Typography>
+                        </Box>
+                        <Typography variant="subtitle2">Registro automático</Typography>
+                      </Box>
+                      <Typography variant="body2" color="textSecondary">
+                        Los datos se insertan en el formulario para su confirmación.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+          
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <CheckCircleIcon color="success" sx={{ mr: 1 }} />
+                    <Typography variant="subtitle1" fontWeight="medium">
+                      Seguridad y Encriptación
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="textSecondary">
+                    Documentos almacenados con encriptación AES-256 para proteger información personal.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <VisibilityIcon color="primary" sx={{ mr: 1 }} />
+                    <Typography variant="subtitle1" fontWeight="medium">
+                      Visualización y Verificación
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="textSecondary">
+                    Interfaz para visualizar documentos originales y compararlos con datos extraídos.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <ErrorIcon color="error" sx={{ mr: 1 }} />
+                    <Typography variant="subtitle1" fontWeight="medium">
+                      Detección de Duplicados
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="textSecondary">
+                    Sistema inteligente que identifica posibles registros duplicados.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+        
+        {/* Centralización */}
+        <Box>
+          <Typography variant="h5" gutterBottom color="primary" sx={{ 
+            borderBottom: '2px solid', 
+            borderColor: 'primary.main', 
+            pb: 1, 
+            display: 'inline-block',
+            mb: 2
+          }}>
+            Centralización de Información
+          </Typography>
+          
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={3}>
+              <Card>
+                <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                  <AccountCircleIcon color="primary" fontSize="large" />
+                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                    Beneficiarios
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={6} sm={3}>
+              <Card>
+                <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                  <FormatListBulletedIcon color="success" fontSize="large" />
+                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                    Programas
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={6} sm={3}>
+              <Card>
+                <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                  <PieChartIcon color="secondary" fontSize="large" />
+                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                    Pagos
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={6} sm={3}>
+              <Card>
+                <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                  <AssessmentIcon color="warning" fontSize="large" />
+                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                    Reportes
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
+      
+      <Box sx={{ mt: 2, textAlign: 'center' }}>
+        <Typography variant="body2" color="textSecondary">
+          Desarrollo de Estadia Profesional - UVEG Tlalpujahua, Michoacán
+        </Typography>
+      </Box>
+    </Container>
+  );
+};
+
   return (
     <div className="container mx-auto p-4 max-w-7xl bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
       <div className="bg-white rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
         {/* Header con logos */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4 border-blue-100">
           <div className="flex items-center space-x-4">
-            <img 
-              src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal_gob.png?raw=true" 
-              alt="Gobierno Tlalpujahua" 
+            <img
+              src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal_gob.png?raw=true"
+              alt="Gobierno Tlalpujahua"
               className="h-16 md:h-20 object-contain"
             />
             <div>
@@ -189,9 +711,9 @@ const DashboardIntegral = () => {
             </div>
           </div>
           <div className="flex items-center mt-4 md:mt-0">
-            <img 
-              src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal.png?raw=true" 
-              alt="Tlalpujahua Pueblo Mágico" 
+            <img
+              src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal.png?raw=true"
+              alt="Tlalpujahua Pueblo Mágico"
               className="h-16 md:h-20 object-contain"
             />
             <div className="ml-4 bg-blue-50 p-2 rounded-lg shadow-sm">
@@ -200,24 +722,23 @@ const DashboardIntegral = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Navegación de pestañas */}
-        <div className="flex overflow-x-auto mb-6 border-b border-gray-200">
+        <div className="inline-flex overflow-x-auto border-b border-gray-200 w-full justify-center">
           {secciones.map(seccion => (
             <button
               key={seccion.id}
-              className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
-                seccionActiva === seccion.id 
-                  ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' 
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-200 ${seccionActiva === seccion.id
+                ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
               onClick={() => setSeccionActiva(seccion.id)}
             >
               {seccion.nombre}
             </button>
           ))}
         </div>
-        
+
         {/* Contenido de las secciones */}
         {seccionActiva === 'resumen' && (
           <div className="animate-fadeIn">
@@ -243,7 +764,7 @@ const DashboardIntegral = () => {
                 <p className="text-xs text-yellow-600">Con seguimiento</p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Metas vs. Avances</h3>
@@ -265,11 +786,10 @@ const DashboardIntegral = () => {
                           <td className="px-4 py-2 whitespace-nowrap text-center text-sm text-gray-500">{meta.logrado}</td>
                           <td className="px-4 py-2 whitespace-nowrap">
                             <div className="flex items-center justify-center">
-                              <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                meta.cumplimiento >= 90 ? 'bg-green-100 text-green-800' :
+                              <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${meta.cumplimiento >= 90 ? 'bg-green-100 text-green-800' :
                                 meta.cumplimiento >= 50 ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
+                                  'bg-red-100 text-red-800'
+                                }`}>
                                 {formatoPorcentaje(meta.cumplimiento)}%
                               </span>
                             </div>
@@ -280,7 +800,7 @@ const DashboardIntegral = () => {
                   </table>
                 </div>
               </div>
-              
+
               <div className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Distribución por Programa</h3>
                 <div className="h-64">
@@ -308,7 +828,7 @@ const DashboardIntegral = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Evolución de Tiempos de Respuesta</h3>
@@ -329,7 +849,7 @@ const DashboardIntegral = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
-              
+
               <div className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Estado de Solicitudes</h3>
                 <div className="h-64">
@@ -359,7 +879,7 @@ const DashboardIntegral = () => {
             </div>
           </div>
         )}
-        
+
         {seccionActiva === 'expedientes' && (
           <div className="animate-fadeIn">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -376,7 +896,7 @@ const DashboardIntegral = () => {
                 <p className="text-3xl font-bold text-purple-700">{porcentajeTotal}%</p>
               </div>
             </div>
-            
+
             <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
               <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Progreso por Programa</h3>
               <div className="overflow-x-auto">
@@ -401,24 +921,22 @@ const DashboardIntegral = () => {
                           {programa.total}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            programa.porcentaje > 75 ? 'bg-green-100 text-green-800' :
+                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${programa.porcentaje > 75 ? 'bg-green-100 text-green-800' :
                             programa.porcentaje > 50 ? 'bg-blue-100 text-blue-800' :
-                            programa.porcentaje > 25 ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'
-                          }`}>
+                              programa.porcentaje > 25 ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-red-100 text-red-800'
+                            }`}>
                             {programa.porcentaje}%
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="w-full bg-gray-200 rounded-full h-2.5">
-                            <div 
-                              className={`h-2.5 rounded-full ${
-                                programa.porcentaje > 75 ? 'bg-green-600' :
+                            <div
+                              className={`h-2.5 rounded-full ${programa.porcentaje > 75 ? 'bg-green-600' :
                                 programa.porcentaje > 50 ? 'bg-blue-600' :
-                                programa.porcentaje > 25 ? 'bg-yellow-500' :
-                                'bg-red-600'
-                              }`} 
+                                  programa.porcentaje > 25 ? 'bg-yellow-500' :
+                                    'bg-red-600'
+                                }`}
                               style={{ width: `${programa.porcentaje}%` }}
                             ></div>
                           </div>
@@ -429,7 +947,7 @@ const DashboardIntegral = () => {
                 </table>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg shadow-md">
                 <h3 className="font-semibold text-gray-700 mb-2 border-l-4 border-green-500 pl-2">Observaciones:</h3>
@@ -440,7 +958,7 @@ const DashboardIntegral = () => {
                   <li>La priorización se realiza según la frecuencia de consulta de cada tipo de expediente.</li>
                 </ul>
               </div>
-              
+
               <div className="bg-blue-50 p-4 rounded-lg shadow-md">
                 <h3 className="font-semibold text-blue-700 mb-2 border-l-4 border-blue-500 pl-2">Próximos pasos:</h3>
                 <ul className="list-disc pl-5 text-gray-600 text-sm">
@@ -453,7 +971,7 @@ const DashboardIntegral = () => {
             </div>
           </div>
         )}
-        
+
         {seccionActiva === 'tiempos' && (
           <div className="animate-fadeIn">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -473,7 +991,7 @@ const DashboardIntegral = () => {
                 <p className="text-xs text-purple-500">Mejora en tiempo</p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Evolución de Tiempos de Respuesta</h3>
@@ -494,7 +1012,7 @@ const DashboardIntegral = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
-              
+
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Mejora por Tipo de Actividad</h3>
                 <div className="h-72">
@@ -513,7 +1031,7 @@ const DashboardIntegral = () => {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" label={{ value: 'Minutos', position: 'insideBottom', offset: -5 }} />
                       <YAxis dataKey="nombre" type="category" />
-                      <Tooltip formatter={(value) => `${value} minutos`} />
+                      <Tooltip formatter={(value) => [`${value} minutos`]} />
                       <Legend />
                       <Bar dataKey="antes" name="Antes" fill="#8884d8" />
                       <Bar dataKey="despues" name="Después" fill="#82ca9d" />
@@ -522,7 +1040,7 @@ const DashboardIntegral = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 p-4 rounded-lg shadow-md">
               <h3 className="font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Factores de Mejora:</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -542,7 +1060,7 @@ const DashboardIntegral = () => {
             </div>
           </div>
         )}
-        
+
         {seccionActiva === 'competencias' && (
           <div className="animate-fadeIn">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -565,7 +1083,7 @@ const DashboardIntegral = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
-              
+
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Avance de Capacitación</h3>
                 <div className="h-72">
@@ -586,7 +1104,7 @@ const DashboardIntegral = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Habilidades Desarrolladas</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -619,7 +1137,7 @@ const DashboardIntegral = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 p-4 rounded-lg shadow-md">
               <h3 className="font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Metodología de Capacitación:</h3>
               <ul className="list-disc pl-5 text-gray-600 text-sm">
@@ -632,14 +1150,14 @@ const DashboardIntegral = () => {
             </div>
           </div>
         )}
-        
+
         {seccionActiva === 'organizacion' && (
           <div className="animate-fadeIn">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Sistema de Nomenclatura y Organización Digital</h3>
                 <p className="text-gray-600 mb-4">Implementación de un sistema estandarizado para la nomenclatura y organización de archivos digitales.</p>
-                
+
                 <div className="mb-4">
                   <h4 className="font-medium text-gray-700 mb-2">Formato de nomenclatura:</h4>
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
@@ -655,7 +1173,7 @@ const DashboardIntegral = () => {
                     <p>Esta nomenclatura permite identificar rápidamente el contenido del archivo y facilita la organización digital.</p>
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <h4 className="font-medium text-gray-700 mb-2">Beneficios del Sistema:</h4>
                   <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
@@ -666,7 +1184,7 @@ const DashboardIntegral = () => {
                     <li>Facilita la continuidad en caso de cambio de personal</li>
                   </ul>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2">Protocolo de Respaldo:</h4>
                   <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm">
@@ -676,7 +1194,7 @@ const DashboardIntegral = () => {
                       <li><strong>Semanal:</strong> Todos los expedientes activos (viernes)</li>
                       <li><strong>Mensual:</strong> Base de datos completa (último día)</li>
                     </ul>
-                    
+
                     <p className="font-semibold text-yellow-800 mt-3 mb-1">Medios de respaldo:</p>
                     <ul className="list-disc pl-5 text-gray-600">
                       <li>Nube institucional (acceso restringido)</li>
@@ -685,18 +1203,18 @@ const DashboardIntegral = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Estructura de Organización Digital</h3>
                 <p className="text-gray-600 mb-4">Jerarquía de carpetas para una organización óptima y eficiente.</p>
-                
+
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-700 mb-2">Jerarquía de Carpetas:</h4>
+                <h4 className="font-medium text-gray-700 mb-2">Jerarquía de Carpetas:</h4>
                   <div className="bg-gray-50 p-3 border border-gray-200 rounded-md max-h-96 overflow-y-auto">
                     {estructuraCarpetas.map(carpeta => renderCarpeta(carpeta))}
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2">Mejoras y Resultados:</h4>
                   <div className="grid grid-cols-1 gap-3">
@@ -710,7 +1228,7 @@ const DashboardIntegral = () => {
                         <div className="bg-green-600 h-2 rounded-full" style={{ width: '95%' }}></div>
                       </div>
                     </div>
-                    
+
                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                       <p className="font-medium text-blue-800 mb-1">Expedientes localizables:</p>
                       <div className="flex justify-between text-sm">
@@ -721,7 +1239,7 @@ const DashboardIntegral = () => {
                         <div className="bg-blue-600 h-2 rounded-full" style={{ width: '99.5%' }}></div>
                       </div>
                     </div>
-                    
+
                     <div className="p-3 bg-purple-50 border border-purple-200 rounded-md">
                       <p className="font-medium text-purple-800 mb-1">Adopción del sistema:</p>
                       <div className="flex justify-between text-sm">
@@ -736,7 +1254,7 @@ const DashboardIntegral = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 p-4 rounded-lg shadow-md">
               <h3 className="font-semibold text-gray-700 mb-2 border-l-4 border-blue-500 pl-2">Impacto y Proyección:</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -756,23 +1274,39 @@ const DashboardIntegral = () => {
             </div>
           </div>
         )}
+
+        {seccionActiva === 'reporteSistema' && ( // Renderiza el componente ReporteSistema cuando la pestaña está activa
+          <div className="animate-fadeIn">
+            <ReporteSistema />
+          </div>
+        )}
+
+
       </div>
-      
+
+      {/* Sección final con logos y texto actualizado */}
       <div className="mt-8 text-center text-sm text-gray-600 p-4 bg-white rounded-lg shadow-md">
         <div className="flex justify-center items-center space-x-4 mb-2">
-          <img 
-            src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal_gob.png?raw=true" 
-            alt="Gobierno Tlalpujahua" 
+          <img
+            src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal_gob.png?raw=true"
+            alt="Gobierno Tlalpujahua"
             className="h-10 object-contain"
           />
-          <img 
-            src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal.png?raw=true" 
-            alt="Tlalpujahua Pueblo Mágico" 
+          <img
+            src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/tlal.png?raw=true"
+            alt="Tlalpujahua Pueblo Mágico"
+            className="h-10 object-contain"
+          />
+          {/* Logo UVEG agregado */}
+          <img
+            src="https://github.com/ABoldCodeU/imagenes-para-proyectos/blob/main/imagenes/uveg_logo.jpg?raw=true"
+            alt="UVEG"
             className="h-10 object-contain"
           />
         </div>
         <p>Estadía Profesional - Tlalpujahua, Michoacán</p>
-        <p className="font-semibold">Dashboard desarrollado como evidencia del Proyecto de Modernización Administrativa</p>
+        {/* Texto actualizado */}
+        <p className="font-semibold">Reporte final del proyecto de de estadia profesional</p>
         <p className="mt-2">Desarrollado por <span className="font-semibold text-blue-600">Alfonso Boldo</span></p>
       </div>
     </div>
